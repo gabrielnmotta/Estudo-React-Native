@@ -44,8 +44,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 36,
     marginBottom: 42,
-    alignContent: "center",
-    justifyContent: "center",
+    alignItems: "center",
   },
   emptyList: {
     color: "#fff",

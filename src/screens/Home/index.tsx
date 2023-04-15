@@ -7,37 +7,34 @@ import {
   FlatList,
   Alert,
 } from "react-native";
+import React, { useState } from "react";
 import { styles } from "./styles";
 import { Participant } from "../../components/Participant";
 import moment from "moment";
 
 export default function Home() {
+  const [participants, setParticipants] = useState<string[]>([]);
+  const [participantName, setParticipantName] = useState("");
+
   const time = new Date().toLocaleTimeString();
   const greeting =
     time < "12:00:00"
-      ? "Bom dia"
+      ? "Good Morning"
       : time < "18:00:00"
-      ? "Boa tarde"
-      : "Boa noite";
+      ? "Good Afternoon"
+      : "Good Night";
   const realTime = moment().format("LL");
 
-  const participants = [
-    "Rod",
-    "Gabriel",
-    "Diego",
-    "Rafael",
-    "Bruna",
-    "Jax",
-    "Luna",
-    "Luiz",
-    "Isa",
-    "Natan",
-  ];
-
   function handleParticipantAdd() {
-    if (participants.includes("Rod")) {
-      return Alert.alert("Novo participante", "Rod já está na lista");
+    if (participants.includes(participantName)) {
+      return Alert.alert(
+        "Novo participante",
+        `${participantName} já está na lista`
+      );
     }
+
+    setParticipants([...participants, participantName]);
+    setParticipantName("");
   }
 
   function handleParticipantRemove(name: string) {
@@ -49,7 +46,9 @@ export default function Home() {
         {
           text: "Sim",
           onPress: () => {
-            Alert.alert("Deletado");
+            setParticipants((prevState) =>
+              prevState.filter((participant) => participant !== name)
+            );
           },
         },
         {
@@ -58,7 +57,6 @@ export default function Home() {
         },
       ]
     );
-    console.log("Remover participante: " + name);
   }
 
   return (
@@ -70,8 +68,10 @@ export default function Home() {
       <View style={styles.form}>
         <TextInput
           style={styles.input}
-          placeholder="Nome"
+          placeholder="Name"
           placeholderTextColor="#6b6b6b"
+          onChangeText={setParticipantName}
+          value={participantName}
         />
 
         <TouchableOpacity style={styles.button} onPress={handleParticipantAdd}>
@@ -91,7 +91,7 @@ export default function Home() {
         )}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => (
-          <Text style={styles.emptyList}>Nenhum participante adicionado</Text>
+          <Text style={styles.emptyList}>0 participants here</Text>
         )}
       />
     </View>
